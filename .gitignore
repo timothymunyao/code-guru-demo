@@ -18,3 +18,5 @@ lambda_function_payload.zip
 plan
 users/pymysql
 users/PyMySQL-1.1.0.dist-info
+template.yml
+.DS_Store
