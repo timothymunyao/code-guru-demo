@@ -1,0 +1,18 @@
+### Terraform ###
+# Local .terraform directories
+**/.terraform/*
+.terraform.lock.hcl
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+**/.idea
+**/.fleet
+**/.vscode
+
+**/.env
+**/.env.production
+test
+lambda_function_payload.zip
+plan
