@@ -1,5 +1,9 @@
 data "aws_availability_zones" "available" {}
 
+variable "db_username" {}
+variable "db_password" {}
+variable "db_name" {}
+
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
@@ -45,6 +49,7 @@ resource "aws_security_group" "allow_mysql" {
     Project = "Code Guru Test"
   }
 }
+
 resource "aws_db_instance" "codeguru_test_instance" {
   identifier              = "codegurutestdatabaseinstance"
   instance_class          = "db.t2.micro"
@@ -52,9 +57,9 @@ resource "aws_db_instance" "codeguru_test_instance" {
   allocated_storage       = 20
   engine                  = "mysql"
   engine_version          = "8.0"
-  username                = "test"
-  password                = "Qwerty123!"
-  db_name                 = "test"
+  username                = var.db_username
+  password                = var.db_password
+  db_name                 = var.db_name
   db_subnet_group_name    = aws_db_subnet_group.db_subnet_group.name
   vpc_security_group_ids  = [aws_security_group.allow_mysql.id]
   backup_retention_period = 1
