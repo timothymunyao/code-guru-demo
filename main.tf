@@ -15,35 +15,9 @@ data "aws_iam_policy_document" "assume_role" {
   }
 }
 
-data "aws_iam_policy_document" "assume_github_code_guru_role" {
-  statement {
-    effect = "Allow"
-
-    principals {
-      type        = "Federated"
-      identifiers = ["arn:aws:iam::194104352727:oidc-provider/token.actions.githubusercontent.com"]
-    }
-    condition {
-      test     = "StringEquals"
-      values   = []
-      variable = ""
-    }
-
-    actions = ["sts:AssumeRoleWithWebIdentity"]
-  }
-}
-
 resource "aws_iam_role" "iam_for_lambda" {
   name               = "iam_for_lambda_codeguru"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
-}
-
-resource "aws_iam_role" "github_code_guru_role" {
-  name               = "CodeGuruSecurityGitHubAccessRole"
-  description = "Role for access codeguru-security from github"
-  max_session_duration = 3600
-  assume_role_policy = data.aws_iam_policy_document.assume_role.json
-  managed_policy_arns=["arn:aws:iam::aws:policy/AmazonCodeGuruSecurityScanAccess"]
 }
 
 data "archive_file" "lambda" {
