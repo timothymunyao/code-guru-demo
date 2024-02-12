@@ -23,11 +23,6 @@ data "aws_iam_policy_document" "assume_github_code_guru_role" {
       type        = "Federated"
       identifiers = ["arn:aws:iam::194104352727:oidc-provider/token.actions.githubusercontent.com"]
     }
-    condition {
-      test     = "StringEquals"
-      values   = []
-      variable = ""
-    }
 
     actions = ["sts:AssumeRoleWithWebIdentity"]
   }
