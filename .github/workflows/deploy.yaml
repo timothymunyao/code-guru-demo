@@ -1,29 +1,43 @@
-name: Deploy Infrastructure
+name: CodeGuru Security
 
 on:
   workflow_dispatch:
 
+permissions:
+  id-token: write
+  security-events: write
+  actions: read
+  contents: read
 
 jobs:
   Deploy:
-    name: Deploy
+    name: Run CodeGuru Security Scan
     runs-on: ubuntu-latest
     steps:
 
       - name: Checkout Repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
 
-      - name: Terraform Init
-        uses: hashicorp/setup-terraform@v2
-        env:
-          AWS_ACCESS_KEY_ID:  '1234'
-          AWS_SECRET_ACCESS_KEY:  '123'
+      - name: CodeGuru Security
+        uses: aws-actions/codeguru-security@v1
+        with:
+          source_path: .
+          aws_region: eu-west-1
+          fail_on_severity: Critical
+      - name: Print findings
+        run: |
+          ls -l
+          cat codeguru-security-results.sarif.json
 
-      - name: Terraform Validate
-        uses: hashicorp/terraform-github-actions/validate@v0.3.7
-
-      - name: Terraform Apply
-        uses: hashicorp/terraform-github-actions/apply@v0.4.0
-        env:
-          AWS_ACCESS_KEY_ID:  '1234'
-          AWS_SECRET_ACCESS_KEY:  '123'
+      - name: Upload result
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: codeguru-security-results.sarif.json
