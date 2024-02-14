@@ -60,6 +60,7 @@ resource "aws_db_instance" "codeguru_test_instance" {
   username                = var.db_username
   password                = var.db_password
   db_name                 = var.db_name
+  storage_encrypted       = true
   db_subnet_group_name    = aws_db_subnet_group.db_subnet_group.name
   vpc_security_group_ids  = [aws_security_group.allow_mysql.id]
   backup_retention_period = 1
