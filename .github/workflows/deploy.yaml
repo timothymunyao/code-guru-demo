@@ -46,14 +46,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
-      - name: Deploy using Terraform
         with:
           aws-access-key-id: "ADFODM02323020"
           aws-secret-access-key: "sddstincdslifdi0113"
           aws-region: eu-west-1
+      - name: Deploy using Terraform
         run: |
           terraform init
           terraform apply -auto-approve
